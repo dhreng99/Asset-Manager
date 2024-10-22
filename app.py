@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from models import db, User, Asset
 
 app = Flask(__name__)
@@ -20,6 +20,10 @@ with app.app_context():
         db.session.add(user1)
         db.session.add(asset1)
         db.session.commit()
+        
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
