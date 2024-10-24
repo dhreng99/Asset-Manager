@@ -1,0 +1,7 @@
+<!-- templates/edit_asset.html -->
+<form method="POST">
+    <input type="text" name="name" value="{{ asset.name }}" required>
+    <textarea name="description">{{ asset.description }}</textarea>
+    <button type="submit">Update Asset</button>
+</form>
+<a href="{{ url_for('list_assets') }}">Back to Assets</a>
