@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from models import db, User
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -28,7 +29,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
+        if user and check_password_hash(user.password, password):
             login_user(user)
             flash('Logged in successfully.')
             return redirect(url_for('home'))
@@ -51,7 +52,8 @@ def register():
         if User.query.filter_by(username=username).first():
             flash('Username already exists.')
         else:
-            new_user = User(username=username, password=password, role='user')
+            password_hashed = generate_password_hash(password, method='pbkdf2:sha256')
+            new_user = User(username=username, password=password_hashed, role='user')
             db.session.add(new_user)
             db.session.commit()
             flash('Registration successful.')
