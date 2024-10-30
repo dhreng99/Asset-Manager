@@ -1,0 +1,28 @@
+.container {
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background-color: #4d79ff;
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+}
