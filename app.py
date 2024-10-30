@@ -1,3 +1,5 @@
+# app.py
+
 from flask import Flask, render_template, redirect, url_for, request, flash, abort
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from models import db, User, Asset
@@ -114,11 +116,15 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
+        # Sample data seeding
         if not User.query.filter_by(username='admin').first():
             admin = User(username='admin', password=generate_password_hash('adminpass', method='pbkdf2:sha256'), role='admin')
-            user = User(username='user', password=generate_password_hash('userpass', method='pbkdf2:sha256'), role='user')
             db.session.add(admin)
+
+        if not User.query.filter_by(username='user').first():
+            user = User(username='user', password=generate_password_hash('userpass', method='pbkdf2:sha256'), role='user')
             db.session.add(user)
-            db.session.commit()
+
+        db.session.commit()
 
     app.run(debug=True)
