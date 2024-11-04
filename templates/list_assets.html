@@ -16,14 +16,20 @@
             <td>{{ asset.name }}</td>
             <td>{{ asset.description }}</td>
             <td>
-                <a href="{{ url_for('edit_asset', asset_id=asset.id) }}" class="btn btn-secondary"><i class="fas fa-edit"></i> Edit</a>
+                <a href="{{ url_for('edit_asset', asset_id=asset.id) }}" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                {% if current_user.role == 'admin' %}
                 <form method="POST" action="{{ url_for('delete_asset', asset_id=asset.id) }}" style="display:inline;">
                     <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
                 </form>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+{% if current_user.role == 'admin' %}
 <a href="{{ url_for('new_asset') }}" class="btn btn-success"><i class="fas fa-plus"></i> Create New Asset</a>
+{% endif %}
 {% endblock %}
