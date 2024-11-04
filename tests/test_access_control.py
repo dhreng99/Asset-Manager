@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash
 @pytest.fixture
 def client():
     flask_app.config['TESTING'] = True
+    flask_app.config['WTF_CSRF_ENABLED'] = False  # Disable CSRF for testing
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     with flask_app.test_client() as client:
         with flask_app.app_context():
@@ -30,34 +31,33 @@ def client():
             db.drop_all()
 
 def login(client, username, password):
-    return client.post('/login', data=dict(
+    response = client.post('/login', data=dict(
         username=username,
         password=password
     ), follow_redirects=True)
+    if b'Logged in successfully.' not in response.data:
+        print(response.data)
+        raise AssertionError('Login failed')
+    return response
 
 def test_admin_access(client):
-    with flask_app.app_context():
-        # Log in as an admin user
-        login(client, 'admin', 'adminpass')
+    login(client, 'admin', 'adminpass')
 
-        # Test admin can delete an asset
+    with flask_app.app_context():
         admin = User.query.filter_by(username='admin').first()
         asset = Asset(name='AdminTestAsset', description='An asset by admin', owner_id=admin.id)
         db.session.add(asset)
         db.session.commit()
 
-        # Important: Grasp the asset `id` within the session to avoid detachment
         asset_id = asset.id
 
     response = client.post(f'/assets/delete/{asset_id}', follow_redirects=True)
     assert b'Asset deleted successfully.' in response.data
 
 def test_regular_user_no_delete_access(client):
-    with flask_app.app_context():
-        # Log in as a regular user
-        login(client, 'user', 'user123')
+    login(client, 'user', 'user123')
 
-        # Add an asset for testing
+    with flask_app.app_context():
         user = User.query.filter_by(username='user').first()
         asset = Asset(name='UserAsset', description='An asset for testing', owner_id=user.id)
         db.session.add(asset)
@@ -65,6 +65,7 @@ def test_regular_user_no_delete_access(client):
 
         asset_id = asset.id
 
-    # Test regular user cannot delete asset
-    response = client.post(f'/assets/delete/{asset_id}', follow_redirects=True)
-    assert response.status_code == 403  # Forbidden access
+    # Check for forbidden 403 response
+    response = client.post(f'/assets/delete/{asset_id}')
+    assert response.status_code == 403
+    assert b'Forbidden' in response.data  # Validate that the forbidden content was served
