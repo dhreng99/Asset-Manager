@@ -1,6 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Welcome to the IT Asset Manager!</h1>
-<a href="{{ url_for('list_assets') }}" class="btn btn-primary mt-4">View Assets</a>
+<div class="container mt-5">
+    <h2>Welcome to the IT Asset Manager</h2>
+    <p class="lead">Here's a quick overview of your assets.</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Assets</div>
+                <div class="card-body">
+                    <h5 class="card-title">25</h5>
+                    <p class="card-text">Total assets managed in your system.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Recently Added</div>
+                <div class="card-body">
+                    <h5 class="card-title">Asset Name</h5>
+                    <p class="card-text">Description or other details.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Actions</div>
+                <div class="card-body">
+                    <a href="{{ url_for('list_assets') }}" class="btn btn-light">View All Assets</a>
+                    <a href="{{ url_for('new_asset') }}" class="btn btn-light">Create Asset</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
