@@ -18,7 +18,7 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="/assets">Assets</a></li>
-                <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" id="logout-link" href="/logout">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -57,6 +57,16 @@
                     }
                 });
             });
+
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(event) {
+                    var confirmed = confirm('Are you sure you want to logout?');
+                    if (!confirmed) {
+                        event.preventDefault();
+                    }
+                });
+            }
         });
     </script>
 </body>

@@ -4,6 +4,8 @@ from models import db, User, Asset
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from forms import RegistrationForm, LoginForm, AssetForm
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -11,6 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///assets.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+
+migrate = Migrate(app, db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -71,7 +75,13 @@ def register():
 def new_asset():
     form = AssetForm()
     if form.validate_on_submit():
-        asset = Asset(name=form.name.data, description=form.description.data, owner_id=current_user.id)
+        # Check for existing asset name
+        existing_asset = Asset.query.filter_by(name=form.name.data).first()
+        if existing_asset:
+            flash('An asset with this name already exists. Please choose a different name.', 'warning')
+            return render_template('new_asset.html', form=form)
+
+        asset = Asset(name=form.name.data, description=form.description.data, owner_id=current_user.id, created_by=current_user.username)
         db.session.add(asset)
         db.session.commit()
         flash('Asset created successfully.', 'success')
