@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -15,3 +16,5 @@ class Asset(db.Model):
     description = db.Column(db.String(200))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     owner = db.relationship('User', backref=db.backref('assets', lazy=True))
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    created_by = db.Column(db.String(150), nullable=True)

@@ -20,3 +20,8 @@ class LoginForm(FlaskForm):
 class AssetForm(FlaskForm):
     name = StringField('Asset Name', validators=[DataRequired(), Length(max=200)])
     description = TextAreaField('Description', validators=[Length(max=500)])
+
+    def validate_name(self, field):
+        from app import Asset
+        if Asset.query.filter_by(name=field.data).first():
+            raise ValidationError('An asset with this name already exists.')
