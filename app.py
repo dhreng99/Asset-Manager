@@ -6,11 +6,17 @@ from functools import wraps
 from forms import RegistrationForm, LoginForm, AssetForm
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///assets.db'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_key')  
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///assets.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SESSION_COOKIE_SECURE'] = True  # Use HTTPS to securely transmit cookies
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent JavaScript access to session cookies
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Enforce SameSite policy to protect against CSRF
 
 db.init_app(app)
 
@@ -22,7 +28,7 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))  # Updated to use session.get()
+    return db.session.get(User, int(user_id))
 
 def admin_required(f):
     @wraps(f)
