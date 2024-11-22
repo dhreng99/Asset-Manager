@@ -10,7 +10,7 @@
             <div class="card text-white bg-primary mb-3">
                 <div class="card-header">Total Assets</div>
                 <div class="card-body">
-                    <h5 class="card-title">25</h5>
+                    <h5 class="card-title">{{ total_assets }}</h5>
                     <p class="card-text">Total assets managed in your system.</p>
                 </div>
             </div>
@@ -19,8 +19,13 @@
             <div class="card text-white bg-success mb-3">
                 <div class="card-header">Recently Added</div>
                 <div class="card-body">
-                    <h5 class="card-title">Asset Name</h5>
-                    <p class="card-text">Description or other details.</p>
+                    {% if recent_asset %}
+                        <h5 class="card-title">{{ recent_asset.name }}</h5>
+                        <p class="card-text">{{ recent_asset.description }}</p>
+                        <small class="text-white-50">{{ recent_asset.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                    {% else %}
+                        <p class="card-text">No recent assets to display.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -29,7 +34,9 @@
                 <div class="card-header">Actions</div>
                 <div class="card-body">
                     <a href="{{ url_for('list_assets') }}" class="btn btn-light">View All Assets</a>
+                    {% if current_user.role == 'admin' %} <!-- Conditional check for role -->
                     <a href="{{ url_for('new_asset') }}" class="btn btn-light">Create Asset</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

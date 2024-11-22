@@ -42,7 +42,9 @@ def admin_required(f):
 @app.route('/')
 @login_required
 def home():
-    return render_template('index.html')
+    total_assets = Asset.query.count()
+    recent_asset = Asset.query.order_by(Asset.date_created.desc()).first()
+    return render_template('index.html', total_assets=total_assets, recent_asset=recent_asset)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -104,7 +106,7 @@ def list_assets():
 @login_required
 def edit_asset(asset_id):
     asset = Asset.query.get_or_404(asset_id)
-    form = AssetForm(obj=asset)  # Pre-populate form with existing asset data
+    form = AssetForm(obj=asset, original_name=asset.name)  # Pass original_name to the form
     if form.validate_on_submit():
         asset.name = form.name.data
         asset.description = form.description.data

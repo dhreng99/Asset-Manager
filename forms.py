@@ -25,7 +25,13 @@ class AssetForm(FlaskForm):
     name = StringField('Asset Name', validators=[DataRequired(), Length(max=200)])
     description = TextAreaField('Description', validators=[Length(max=500)])
 
+    def __init__(self, *args, **kwargs):
+        self.original_name = kwargs.pop('original_name', None)
+        super(AssetForm, self).__init__(*args, **kwargs)
+
     def validate_name(self, field):
-        from app import Asset
-        if Asset.query.filter_by(name=field.data).first():
-            raise ValidationError('An asset with this name already exists.')
+        if field.data != self.original_name:
+            from app import Asset
+            asset = Asset.query.filter_by(name=field.data).first()
+            if asset:
+                raise ValidationError('An asset with this name already exists.')
