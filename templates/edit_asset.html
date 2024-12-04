@@ -4,10 +4,12 @@
 <h2>Edit Asset</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
+    <!-- Includes hidden fields for security and CSRF protection -->
     <div class="form-group">
         {{ form.name.label(class="form-label") }}
         {{ form.name(class="form-control") }}
         {% for error in form.name.errors %}
+        <!-- Displays validation errors for the name field -->
         <small class="text-danger">{{ error }}</small>
         {% endfor %}
     </div>
@@ -18,7 +20,9 @@
         <small class="text-danger">{{ error }}</small>
         {% endfor %}
     </div>
+    <!-- Submit button to update the asset details -->
     <button type="submit" class="btn btn-primary">Update Asset</button>
 </form>
+<!-- Button to navigate back to the asset list page -->
 <a href="{{ url_for('list_assets') }}" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Back to Assets</a>
 {% endblock %}

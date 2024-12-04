@@ -2,11 +2,14 @@
 
 {% block content %}
 <div class="container mt-5">
+    <!-- Main container -->
     <h2>Welcome to the IT Asset Manager</h2>
     <p class="lead">Here's a quick overview of your assets.</p>
     
     <div class="row mt-4">
+        <!-- Row to organize the following cards in a responsive grid layout -->
         <div class="col-md-4">
+            <!-- First column for displaying the total assets count -->
             <div class="card text-white bg-primary mb-3">
                 <div class="card-header">Total Assets</div>
                 <div class="card-body">
@@ -16,6 +19,7 @@
             </div>
         </div>
         <div class="col-md-4">
+            <!-- Second column for displaying the most recently added asset -->
             <div class="card text-white bg-success mb-3">
                 <div class="card-header">Recently Added</div>
                 <div class="card-body">
@@ -30,11 +34,15 @@
             </div>
         </div>
         <div class="col-md-4">
+            <!-- Third column for action links -->
             <div class="card text-white bg-info mb-3">
                 <div class="card-header">Actions</div>
                 <div class="card-body">
+                    <!-- Button to view a list of all assets -->
                     <a href="{{ url_for('list_assets') }}" class="btn btn-light">View All Assets</a>
-                    {% if current_user.role == 'admin' %} <!-- Conditional check for role -->
+                    <!-- Conditional check for role -->
+                    {% if current_user.role == 'admin' %}
+                    <!-- Button to view a list of all assets -->
                     <a href="{{ url_for('new_asset') }}" class="btn btn-light">Create Asset</a>
                     {% endif %}
                 </div>
