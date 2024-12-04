@@ -3,6 +3,15 @@
 ## Summary
 The Asset Manager is a web-based application designed to help organisations efficiently track and manage their IT assets. It provides a user-friendly interface for creating, updating, and viewing asset information.
 
+## Features
+- **Asset Management:** Easily create, read, update, and delete asset records.
+- **User Roles:** Supports two user roles - admin and regular user - each with specific permissions.
+- **User Authentication:** Users must register and log in to access the application.
+- **Dashboard:** A clean and intuitive dashboard provides an overview of assets.
+- **Responsive Design:** The application is responsive and works on various devices.
+
+    ![image](static/css/js/images/UseCase.jpg)
+
 ## URL
 - The Asset Manager application can be accessed using the following link:
 
@@ -26,15 +35,6 @@ https://asset-manager-msfh.onrender.com
 ## User Roles
 - **Admin:** Administrators can perform all CRUD operations on IT assets, including creating, viewing, updating, and deleting records.
 - **Regular User:** Regular users can view and update existing assets.
-
-## Features
-- **Asset Management:** Easily create, read, update, and delete asset records.
-- **User Roles:** Supports two user roles - admin and regular user - each with specific permissions.
-- **User Authentication:** Users must register and log in to access the application.
-- **Dashboard:** A clean and intuitive dashboard provides an overview of assets.
-- **Responsive Design:** The application is responsive and works on various devices.
-
-    ![image](static\css\js\images\UseCase.jpg)
 
 ## Database Schema
 
