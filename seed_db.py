@@ -15,8 +15,8 @@ def seed_data():
             # Add sample assets
             asset1 = Asset(name='Laptop', description='Dell XPS 13', owner_id=1, created_by='admin')
             asset2 = Asset(name='Monitor', description='ASUS 27-inch', owner_id=1, created_by='admin')
-            asset3 = Asset(name='Keyboard', description='Mechanical Keyboard', owner_id=2, created_by='user')
-            asset4 = Asset(name='Mouse', description='Logitech Wireless', owner_id=2, created_by='user')
+            asset3 = Asset(name='Keyboard', description='Mechanical Keyboard', owner_id=2, created_by='admin')
+            asset4 = Asset(name='Mouse', description='Logitech Wireless', owner_id=2, created_by='admin')
             db.session.add_all([asset1, asset2, asset3, asset4])
 
             db.session.commit()

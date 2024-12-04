@@ -4,6 +4,7 @@
 <h2>Create New Asset</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
+    <!-- Form group for asset name input -->
     <div class="form-group">
         {{ form.name.label(class="form-label") }}
         {{ form.name(class="form-control") }}
@@ -11,6 +12,7 @@
         <small class="text-danger">{{ error }}</small>
         {% endfor %}
     </div>
+    <!-- Form group for asset description input -->
     <div class="form-group">
         {{ form.description.label(class="form-label") }}
         {{ form.description(class="form-control") }}
@@ -18,7 +20,9 @@
         <small class="text-danger">{{ error }}</small>
         {% endfor %}
     </div>
+    <!-- Button to submit the form and create the asset -->
     <button type="submit" class="btn btn-primary">Create Asset</button>
 </form>
+<!-- Link to go back to the list of assets -->
 <a href="{{ url_for('list_assets') }}" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Back to Assets</a>
 {% endblock %}
