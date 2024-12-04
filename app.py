@@ -9,8 +9,10 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 
+# Load environment variables from .env file
 load_dotenv()
 app = Flask(__name__)
+# Set secret key for secure sessions
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_key')  
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///assets.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -18,8 +20,8 @@ app.config['SESSION_COOKIE_SECURE'] = True  # Use HTTPS to securely transmit coo
 app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent JavaScript access to session cookies
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Enforce SameSite policy to protect against CSRF
 
+# Initialize the database with the Flask app and enable migrations
 db.init_app(app)
-
 migrate = Migrate(app, db)
 
 login_manager = LoginManager()
@@ -27,20 +29,24 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 @login_manager.user_loader
+# Function to load a user from the database by user ID
 def load_user(user_id):
     return db.session.get(User, int(user_id))
 
 def admin_required(f):
+    # Decorator to require admin role for accessing certain views
     @wraps(f)
     @login_required
     def decorated_function(*args, **kwargs):
         if current_user.role != 'admin':
-            abort(403)  # Forbidden
+            # Aborts with 403 Forbidden if the user is not an admin
+            abort(403)
         return f(*args, **kwargs)
     return decorated_function
 
 @app.route('/')
 @login_required
+# Home route showing the number of assets and the most recent asset
 def home():
     total_assets = Asset.query.count()
     recent_asset = Asset.query.order_by(Asset.date_created.desc()).first()
@@ -48,6 +54,7 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Login route for user authentication
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -61,12 +68,14 @@ def login():
 
 @app.route('/logout')
 @login_required
+# Route to log out the user
 def logout():
     logout_user()
     flash('Logged out successfully.', 'success')
     return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
+# Route for user registration
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -80,6 +89,7 @@ def register():
 
 @app.route('/assets/new', methods=['GET', 'POST'])
 @login_required
+# Route for creating a new asset
 def new_asset():
     form = AssetForm()
     if form.validate_on_submit():
@@ -98,12 +108,14 @@ def new_asset():
 
 @app.route('/assets')
 @login_required
+# Route that lists all assets
 def list_assets():
     assets = Asset.query.all()
     return render_template('list_assets.html', assets=assets)
 
 @app.route('/assets/edit/<int:asset_id>', methods=['GET', 'POST'])
 @login_required
+# Route to edit an asset based on its id
 def edit_asset(asset_id):
     asset = Asset.query.get_or_404(asset_id)
     form = AssetForm(obj=asset, original_name=asset.name)  # Pass original_name to the form
@@ -117,6 +129,7 @@ def edit_asset(asset_id):
 
 @app.route('/assets/delete/<int:asset_id>', methods=['POST'])
 @admin_required
+# Route to delete an asset; admin access required
 def delete_asset(asset_id):
     asset = Asset.query.get_or_404(asset_id)
     db.session.delete(asset)
@@ -126,8 +139,8 @@ def delete_asset(asset_id):
 
 if __name__ == "__main__":
     with app.app_context():
+        # Ensure tables exist
         db.create_all()
-
         # Sample data seeding
         if not User.query.filter_by(username='admin').first():
             admin = User(username='admin', password=generate_password_hash('adminpass', method='pbkdf2:sha256'), role='admin')
@@ -138,5 +151,5 @@ if __name__ == "__main__":
             db.session.add(user)
 
         db.session.commit()
-
+    # Start the Flask app
     app.run(debug=True)
