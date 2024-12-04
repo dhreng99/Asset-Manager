@@ -10,7 +10,7 @@ The Asset Manager is a web-based application designed to help organisations effi
 - **Dashboard:** A clean and intuitive dashboard provides an overview of assets.
 - **Responsive Design:** The application is responsive and works on various devices.
 
-    ![image](static\css\js\images\UseCase.jpg)
+    ![image](static/css/js/images/UseCase.jpg)
 
 ## URL
 - The Asset Manager application can be accessed using the following link:
