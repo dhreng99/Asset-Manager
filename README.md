@@ -30,7 +30,7 @@ https://asset-manager-msfh.onrender.com
 - **Dashboard:** A clean and intuitive dashboard provides an overview of assets.
 - **Responsive Design:** The application is responsive and works on various devices.
 
-    ![image](static/css/js/images/UseCase.jpg)
+    ![image](static/css/js/images/UseCase.png)
 
 ## User Roles
 - **Admin:** Administrators can perform all CRUD operations on IT assets, including creating, viewing, updating, and deleting records.
